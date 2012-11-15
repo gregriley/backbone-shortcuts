@@ -30,6 +30,17 @@
         _results.push(key(shortcutKey, scope, method));
       }
       return _results;
+    },
+    undelegateShortcuts: function() {
+        if (!this.shortcuts) return;
+        var _ref, shortcut, match, shortcutKey, scope;
+        _ref = this.shortcuts;
+        for (shortcut in _ref) {
+            match = shortcut.match(/^(\S+)\s*(.*)$/);
+            shortcutKey = match[1];
+            scope = match[2] === "" ? "all" : match[2];
+            key.unbind(shortcutKey, scope);
+        }
     }
   });
 
