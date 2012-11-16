@@ -23,9 +23,10 @@
         else {
             method = callback;
         }
-        match = shortcut.match(/^(\S+)\s*(.*)$/);
+        match = shortcut.match(/^(.*?)\s*(<.*>)?$/);
         shortcutKey = match[1];
-        scope = match[2] === "" ? "all" : match[2];
+        scope = typeof match[2] === 'undefined' ? "all" : match[2].replace('>', '').replace('<', '');
+
         method = _.bind(method, this);
         _results.push(key(shortcutKey, scope, method));
       }
@@ -36,10 +37,15 @@
         var _ref, shortcut, match, shortcutKey, scope;
         _ref = this.shortcuts;
         for (shortcut in _ref) {
-            match = shortcut.match(/^(\S+)\s*(.*)$/);
+            match = shortcut.match(/^(.*?)\s*(<.*>)?$/);
             shortcutKey = match[1];
-            scope = match[2] === "" ? "all" : match[2];
-            key.unbind(shortcutKey, scope);
+            scope = typeof match[2] === 'undefined' ? "all" : match[2];
+
+            shortcutKey = shortcutKey.replace(/\s/g,'');
+            var keys = shortcutKey.split(',');
+            for (i = 0; i < keys.length; i++) {
+                key.unbind(keys[i], scope);
+            }
         }
     }
   });
