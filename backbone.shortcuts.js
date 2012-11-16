@@ -25,10 +25,24 @@
         }
         match = shortcut.match(/^(.*?)\s*(<.*>)?$/);
         shortcutKey = match[1];
-        scope = typeof match[2] === 'undefined' ? "all" : match[2].replace('>', '').replace('<', '');
+        var element = typeof match[2] === 'undefined' ? null : match[2].replace('>', '').replace('<', '')
+        scope = 'all';
 
         method = _.bind(method, this);
-        _results.push(key(shortcutKey, scope, method));
+
+        if (element) {
+            callback = function(e, shortcutE) {
+                var uniqId = _.uniqueId('shortcut');
+                $(e.target).data('shortcutId', uniqId);
+                if ($(element, this.$el).data('shortcutId') == uniqId) {
+                    return method.call(e, shortcutE);
+                }
+            };
+        } else {
+            callback = method;
+        }
+
+        _results.push(key(shortcutKey, scope, callback));
       }
       return _results;
     },
@@ -39,7 +53,7 @@
         for (shortcut in _ref) {
             match = shortcut.match(/^(.*?)\s*(<.*>)?$/);
             shortcutKey = match[1];
-            scope = typeof match[2] === 'undefined' ? "all" : match[2];
+            scope = 'all';
 
             shortcutKey = shortcutKey.replace(/\s/g,'');
             var keys = shortcutKey.split(',');
