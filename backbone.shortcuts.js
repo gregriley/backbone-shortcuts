@@ -27,6 +27,9 @@
         shortcutKey = match[1];
         var element = typeof match[2] === 'undefined' ? null : match[2].replace('>', '').replace('<', '')
         scope = 'all';
+
+        method = _.bind(method, this);  
+          
         if (element) {
             _results.push(
                 key(
