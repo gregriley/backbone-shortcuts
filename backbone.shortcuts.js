@@ -27,22 +27,35 @@
         shortcutKey = match[1];
         var element = typeof match[2] === 'undefined' ? null : match[2].replace('>', '').replace('<', '')
         scope = 'all';
-
-        method = _.bind(method, this);
-
+        var that = this;
         if (element) {
-            callback = function(e, shortcutE) {
-                var uniqId = _.uniqueId('shortcut');
-                $(e.target).data('shortcutId', uniqId);
-                if ($(element, this.$el).data('shortcutId') == uniqId) {
-                    return method.call(e, shortcutE);
-                }
-            };
-        } else {
-            callback = method;
-        }
+            _results.push(
+                key(
+                    shortcutKey,
+                    scope,
+                    method,
+                    function(e) {
+                        var uniqId = _.uniqueId('shortcut');
+                        $(e.target).data('shortcutId', uniqId);
 
-        _results.push(key(shortcutKey, scope, callback));
+                        return $(element, this.$el).data('shortcutId') == uniqId;
+                    }
+                )
+            );
+        } else {
+            _results.push(
+                key(
+                    shortcutKey,
+                    scope,
+                    method,
+                    function(e) {
+                        var tagName = (e.target || e.srcElement).tagName;
+
+                        return !(tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA');
+                    }
+                )
+            );
+        }
       }
       return _results;
     },
