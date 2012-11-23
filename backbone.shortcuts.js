@@ -28,8 +28,7 @@
         var element = typeof match[2] === 'undefined' ? null : match[2].replace('>', '').replace('<', '')
         scope = 'all';
 
-        method = _.bind(method, this);  
-          
+        method = _.bind(method, this);
         if (element) {
             _results.push(
                 key(
@@ -37,6 +36,10 @@
                     scope,
                     method,
                     function(e) {
+                        if (element === 'all') {
+                            return true;
+                        }
+
                         var uniqId = _.uniqueId('shortcut');
                         $(e.target).data('shortcutId', uniqId);
 
