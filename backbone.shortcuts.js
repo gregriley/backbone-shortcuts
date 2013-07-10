@@ -28,7 +28,6 @@
                 shortcutKey = match[1];
                 var element = typeof match[2] === 'undefined' ? null : match[2].replace('>', '').replace('<', '');
                 scope = 'all';
-
                 method = _.bind(method, this);
                 if (element) {
                     _results.push(
@@ -73,15 +72,17 @@
             if (!this.shortcuts) return;
             var _ref, shortcut, match, shortcutKey, scope;
             _ref = this.shortcuts;
+
             for (shortcut in _ref) {
                 match = shortcut.match(/^(.*?)\s*(<.*>)?$/);
                 shortcutKey = match[1];
+                var element = typeof match[2] === 'undefined' ? null : match[2].replace('>', '').replace('<', '');
                 scope = 'all';
 
                 shortcutKey = shortcutKey.replace(/\s/g, '');
                 var keys = shortcutKey.split(',');
                 for (i = 0; i < keys.length; i++) {
-                    key.unbind(keys[i], scope);
+                    key.unbind(keys[i], scope, element);
                 }
             }
         }
